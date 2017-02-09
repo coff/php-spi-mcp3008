@@ -1,0 +1,27 @@
+{
+  "name": "coff/php-spi-mcp3008",
+  "description": "Library for handling mcp3008 analog to digital converter over spi",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Krzysztof Kubanek",
+      "email": "krzysztof.kubanek@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Coff\\Mcp3008\\": "src/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/coff/php-api-datasource.git"
+    }
+  ],
+  "require": {
+    "coff/php-api-datasource": "^0.0.2",
+    "ext-spi": "*"
+  }
+}
