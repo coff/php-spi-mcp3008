@@ -2,7 +2,7 @@
 
 namespace Coff\Mcp3008;
 
-use Coff\DataSource\DataSource;
+use Coff\DataSource\SpiDataSource;
 
 /**
  * MCP3008 - class for reading A/D converter output
@@ -41,7 +41,7 @@ use Coff\DataSource\DataSource;
  * 2. I've also tried running it over +3v on Vdd and RPi's +5v on Vref but that
  *    didn't work due to Vref = Vdd +/- 0.6V.
  */
-class MCP3008DataSource extends DataSource
+class Mcp3008DataSource extends SpiDataSource
 {
     const
         CH0     = 0b00000000,
@@ -57,26 +57,6 @@ class MCP3008DataSource extends DataSource
         MODE_DIFF   = 0b00000000;
 
     /**
-     * @var int $cableSelect 0 or 1 for RPi
-     */
-    protected $cableSelect;
-
-    /**
-     * @var int $busNumber always 0 for RPi
-     */
-    protected $busNumber;
-
-    /**
-     * @var int $speed frequency in Hz
-     */
-    protected $speed;
-
-    /**
-     * @var  \Spi $spi Spi object (see https://github.com/frak/php_spi)
-     */
-    protected $spi;
-
-    /**
      * @var int $mode reading mode, see:
      *      https://cdn-shop.adafruit.com/datasheets/MCP3008.pdf
      *      page 19, table 5-2
@@ -88,56 +68,10 @@ class MCP3008DataSource extends DataSource
      */
     protected $channel;
 
-    public function __construct($busNumber=0, $cableSelect=0, $speed = 10000, $mode = self::MODE_SINGLE)
+    public function __construct($busNumber = 0, $cableSelect = 0, $speed = 10000, $mode = self::MODE_SINGLE)
     {
-        $this->setBusNumber($busNumber);
-        $this->setCableSelect($cableSelect);
-        $this->setSpeed($speed);
+        parent::__construct($busNumber, $cableSelect, $speed);
         $this->setMode($mode);
-
-    }
-
-    /**
-     * @param int $cableSelect
-     * @return $this
-     */
-    public function setCableSelect($cableSelect=0) {
-        $this->cableSelect = $cableSelect;
-
-        return $this;
-    }
-
-    /**
-     * @param int $busNumber
-     * @return $this
-     */
-    public function setBusNumber($busNumber=0) {
-        $this->busNumber = $busNumber;
-
-        return $this;
-    }
-
-    /**
-     * @param int $speed
-     * @return $this
-     */
-    public function setSpeed($speed=10000) {
-        $this->speed = $speed;
-
-        return $this;
-    }
-
-    /**
-     * Sets mode (SINGLE or DIFF). MODE_DIFF allows reading negative voltage
-     * values - see MCP3008 datasheet.
-     * @param int $mode
-     *
-     * @return $this
-     */
-    public function setMode($mode = self::MODE_SINGLE) {
-        $this->mode = $mode;
-
-        return $this;
     }
 
     /**
@@ -161,8 +95,28 @@ class MCP3008DataSource extends DataSource
      * @return int $channel value according to self::CH* constants
      */
     public function getChannel() {
-
         return $this->channel;
+    }
+
+    /**
+     * Sets mode (SINGLE or DIFF). MODE_DIFF allows reading negative voltage
+     * values - see MCP3008 datasheet.
+     * @param int $mode
+     *
+     * @return $this
+     */
+    public function setMode($mode = self::MODE_SINGLE) {
+        $this->mode = $mode;
+
+        return $this;
+    }
+
+    /**
+     * Returns MCP3008 working mode
+     * @return int
+     */
+    public function getMode() {
+        return $this->mode;
     }
 
     /**

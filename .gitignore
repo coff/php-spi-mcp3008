@@ -1,2 +1,4 @@
 # Created by .ignore support plugin (hsz.mobi)
 vendor
+bin/sync.sh
+bin/sync-exclude.txt
