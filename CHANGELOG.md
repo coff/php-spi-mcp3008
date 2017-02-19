@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.3
+
+Vendor update.
+
 ## 0.0.2
 
 Example script channels.php provided.
